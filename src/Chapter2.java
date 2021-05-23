@@ -1,4 +1,7 @@
+import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Chapter2 {
@@ -48,12 +51,73 @@ public class Chapter2 {
                 result.add(apple);
             }
         }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        // 2.3.2 다섯번째 시도: 익명 클래스 사용
+        List<Apple> inventory = new ArrayList<>();
+
+        List<Apple> result = filterApples(inventory, new ApplePredicate() {
+            @Override
+            public boolean test(Apple apple) {
+                return Color.RED.equals(apple.getColor());
+            }
+        });
+
+        // 2.3.3 여섯번째 시도: 람다 표현식 사용
+        List<Apple> result2 = filterApples(inventory, (Apple apple) -> Color.RED.equals(apple.getColor()));
+
+        // 2.3.4 일곱번째 시도 (유연성과 간결함을 둘다 잡음 .!)
+        List<Apple> redApples = filter(inventory, (Apple apple) -> Color.RED.equals(apple.getColor()));
+
+        List<Integer> numbers = new ArrayList<>();
+        List<Integer> evenNumbers = filter(numbers, (Integer i) -> i % 2 == 0);
+
+        // 2.4.1 Comparator로 정렬하기
+        inventory.sort(new Comparator<Apple>() {
+            public int compare(Apple o1, Apple o2) {
+                return o1.getColor().compareTo(o2.getColor());
+            }
+        });
+
+        inventory.sort((Apple a1, Apple a2) -> a1.getColor().compareTo(a2.getColor()));
+
+        // 2.4.2 Runnable로 코드 블록 실행하기
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello world");
+            }
+        });
+
+        Thread t2 = new Thread(() -> System.out.println("Hello world"));
+
+    }
+
+    // 2.3.4 일곱번째 시도
+    public static <T> List<T> filter(List<T> list, Predicate<T> p){
+        List<T> result = new ArrayList<>();
+        for(T e: list){
+            if(p.test(e)){
+                result.add(e);
+            }
+        }
 
         return result;
     }
+
+    // 제네릭 메소드에 대해 생소하여 연습
+    public static <K, T> List<K> test(T a){
+        List<K> temp = new ArrayList<>();
+
+        System.out.println(a.toString());
+
+        return temp;
+    }
 }
 
-class Apple{
+class Apple {
     private Color color;
     private int weight;
 
