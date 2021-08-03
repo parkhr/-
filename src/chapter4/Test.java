@@ -1,5 +1,6 @@
 package chapter4;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +21,20 @@ public class Test {
 
         List<String> threeHighCaloricDishNames =
                 menu.stream()
-                        .filter(dish -> dish.getCalories() > 300) // filter calories
-                        .map(Dish::getName) // get name
-                        .limit(5)
+                        .filter(dish -> {
+                            System.out.println("filtering : " + dish.getName());
+                            return dish.getCalories() > 300;
+                        }) // filter calories
+                        .map(dish -> {
+                            System.out.println("mapping : " + dish.getName());
+                            return dish.getName();
+                        }) // get name
+                        .limit(3)
                         .collect(Collectors.toList()); // result save to new list
 
         System.out.println(threeHighCaloricDishNames);
+
+        List<Dish> vegetarianDishes = menu.stream().filter(Dish::isVegetarian).collect(Collectors.toList());
+        System.out.println(vegetarianDishes);
     }
 }
